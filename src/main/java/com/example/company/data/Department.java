@@ -1,29 +1,27 @@
 package com.example.company.data;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
 public class Department {
     private int id;
     private String name;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private int floor;
 
-    public LocalDateTime getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
@@ -35,7 +33,8 @@ public class Department {
         this.floor = floor;
     }
 
-    public Department(String name, LocalDateTime startTime, LocalDateTime endTime, int floor) {
+    public Department(int id, String name, LocalTime startTime, LocalTime endTime, int floor) {
+        this.id = id;
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;

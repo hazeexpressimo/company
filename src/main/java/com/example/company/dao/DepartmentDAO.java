@@ -29,14 +29,12 @@ public class DepartmentDAO {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(SqlRequest.FIND_ALL_DEPARTMENTS);
             while (rs.next()) {
+                int id = rs.getInt("id");
                 String name = rs.getString("name");
-                Timestamp startTime = rs.getTimestamp("startTime");
-                Timestamp endTime = rs.getTimestamp("endTime");
-                DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE_TIME;
-                LocalDateTime startTimeLocal = LocalDateTime.parse(startTime.toLocalDateTime().format(dtf));
-                LocalDateTime endTimeLocal = LocalDateTime.parse(endTime.toLocalDateTime().format(dtf));
+                LocalTime startTime = LocalTime.parse(rs.getString("startTime"));
+                LocalTime endTime = LocalTime.parse(rs.getString("endTime"));
                 int floor = rs.getInt("floor");
-                Department department = new Department(name, startTimeLocal, endTimeLocal, floor);
+                Department department = new Department(id, name, startTime, endTime, floor);
                 result.add(department);
             }
         } catch (SQLException throwables) {
@@ -49,8 +47,8 @@ public class DepartmentDAO {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SqlRequest.ADD_DEPARTMENT);
         preparedStatement.setString(1, department.getName());
-        preparedStatement.setTimestamp(2, Timestamp.valueOf(department.getStartTime()));
-        preparedStatement.setTimestamp(3, Timestamp.valueOf(department.getEndTime()));
+        preparedStatement.setTime(2, Time.valueOf(department.getStartTime()));
+        preparedStatement.setTime(3, Time.valueOf(department.getEndTime()));
         preparedStatement.setInt(4, department.getFloor());
         preparedStatement.executeUpdate();
     }

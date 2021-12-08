@@ -1,12 +1,37 @@
+<%@ page import="java.sql.Connection" %>
+<%@ page import="com.example.company.dbConnection.ConnectionManager" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="com.example.company.dbConnection.SqlRequest" %>
+<%@ page import="java.sql.SQLException" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!DOCTYPE html>
 <html>
 <link href="styles/style.css" rel="stylesheet" type="text/css">
 <script src="js/script.js"></script>
+<link rel="icon" type="image/x-icon" href="https://trackensure.com/images/favicon.png">
 <head>
-    <title>CCM</title>
+    <title>Department manager</title>
 </head>
 <body>
+<%
+    ResultSet rs = null;
+    ResultSet rs1 = null;
+    int size = 0;
+    try {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        Statement statement = connection.createStatement();
+        Statement statement1 = connection.createStatement();
+        rs = statement.executeQuery("select name from department");
+        rs1 = statement1.executeQuery("select concat(firstname, \' \', lastname) from employee");
+/*        rs.last();
+        size = rs.getRow();
+        rs.beforeFirst();*/
+    } catch (java.sql.SQLException e) {
+        e.printStackTrace();
+    }
+%>
 <h1>
     <a href="https://trackensure.com"><img src="https://s.dou.ua/img/static/companies/LOGO_qmxPasW.png"></a>
 </h1>
@@ -48,7 +73,7 @@
                 </li>
             </ul>
         </form>
-        <form method="post" action="showEmployee">
+        <form method="get" action="showEmployee">
             <ul>
                 <li class="form__line">
                     <button id="button5" class="ui-button">Показать всех сотрудников
@@ -64,89 +89,116 @@
                 </li>
             </ul>
         </form>
+        <form onsubmit="return false">
+            <ul>
+                <li class="form__line">
+                    <button id="button7" onclick="showStatistic(showStat)" class="ui-button statistic-button">Показать статистику
+                    </button>
+                </li>
+            </ul>
+        </form>
     </div>
     <div id="addDep" class="form1" style="display: none">
         <form method="post" action="addDepartment">
             <div class="form_changer">
                 <label for="name">Название отдела:</label>
-                <input type="text" id="name" placeholder="Введите название..." name="nameDepReq">
+                <input type="text" id="name" placeholder="Введите название..." name="nameDepReq" required>
             </div>
             <div class="form_changer">
                 <label for="timeStart">Время начала рабочего дня:</label>
-                <input type="time" id="timeStart" name="startTimeReq">
+                <input type="time" id="timeStart" name="startTimeReq" required>
             </div>
             <div class="form_changer">
                 <label for="timeEnd">Время окончания рабочего дня:</label>
-                <input type="time" id="timeEnd" name="endTimeReq">
+                <input type="time" id="timeEnd" name="endTimeReq" required>
             </div>
             <div class="form_changer">
                 <label for="floor">Этаж:</label>
-                <input type="text" id="floor" placeholder="Введите этаж..." name="floorDepReq">
-                <button type="submit" class="ui-button-submit">Отправить</button>
+                <input type="text" id="floor" placeholder="Введите этаж..." name="floorDepReq" required>
             </div>
+            <button type="submit" class="ui-button-submit">Отправить</button>
         </form>
     </div>
     <div id="addEmp" class="form1" style="display: none">
         <form method="post" action="addEmployee">
             <div class="form_changer">
-                <label>Имя сотрудника:</label>
-                <input type="text" name="nameReq">
+                <label for="nameReq">Имя сотрудника</label>
+                <br>
+                <input type="text" id="nameReq" placeholder="Введите имя" name="nameReq" required>
             </div>
             <div class="form_changer">
-                <label>Фамилия сотрудника:</label>
-                <input type="text" name="lastNameReq">
+                <label for="lastNameReq">Фамилия сотрудника</label>
+                <br>
+                <input type="text" id="lastNameReq" placeholder="Введите фамилию" name="lastNameReq" required>
             </div>
             <div class="form_changer">
-                <label>Дата рождения:</label>
-                <input type="datetime-local" name="dateTimeReq">
+                <label for="dateTimeReq">Дата рождения</label>
+                <br>
+                <input type="datetime-local" id="dateTimeReq" name="dateTimeReq" required>
             </div>
             <div class="form_changer">
-                <label>Работает в отделе:</label>
-                <input type="number" name="textReq">
-                <button type="submit" class="ui-button-submit">Отправить</button>
+                <label for="selectDep">Работает в отделе</label>
+                <br>
+                <select class="ui-select" id="selectDep" name="textReq" required>
+                    <%  while(size > 1){  %>
+                    <option><%= rs.getString(1)%></option>
+                    <% } %>
+                </select>
             </div>
+            <div class="form_changer">
+                <label for="startTimeEmp">Начинает работать</label>
+                <br>
+                <input type="time" id="startTimeEmp" name="startTimeEmp" required>
+            </div>
+            <div class="form_changer">
+                <label for="endTimeEmp">Заканчивает работать</label>
+                <br>
+                <input type="time" id="endTimeEmp" name="endTimeEmp" required>
+            </div>
+            <button type="submit" class="ui-button-submit">Отправить</button>
         </form>
     </div>
     <div id="setDep" class="form1" style="display: none">
         <form>
             <div class="form_changer">
-                <label>Имя сотрудника:</label>
-                <input type="text" name="nameReq">
+                <label>Выберите департамент:</label>
+                <select class="ui-select" id="selectDepForChange" name="chooseDepNameInChangeMenu" required>
+                    <%  while(rs.next()){  %>
+                    <option><%= rs.getString(1)%></option>
+                    <% } %>
+                </select>
             </div>
             <div class="form_changer">
-                <label>Фамилия сотрудника:</label>
-                <input type="text" name="lastNameReq">
+                <label for="timeStartDepChange">Время начала рабочего дня:</label>
+                <input type="time" id="timeStartDepChange" name="changeStartTimeDepReq" required>
             </div>
             <div class="form_changer">
-                <label>Дата рождения:</label>
-                <input type="datetime-local" name="dateTimeReq">
+                <label for="timeEndDepChange">Время окончания рабочего дня:</label>
+                <input type="time" id="timeEndDepChange" name="changeEndTimeDepReq" required>
             </div>
-            <div class="form_changer">
-                <label>Работает в отделе:</label>
-                <input type="text" name="textReq">
-                <button type="submit" class="ui-button-submit">Отправить</button>
-            </div>
+            <button type="submit" class="ui-button-submit">Отправить</button>
         </form>
     </div>
     <div id="setEmp" class="form1" style="display: none">
         <form>
             <div class="form_changer">
-                <label>Имя сотрудника:</label>
-                <input type="text" name="nameReq">
+                <label>Выберите сотрудника:</label>
+                <select class="ui-select" id="selectEmpForChange" name="chooseEmpNameInChangeMenu" required>
+                    <%  while(rs1.next()){  %>
+                    <option value="" selected disabled>Выберите сотрудника</option>
+                    <option><%= rs1.getString(1)%></option>
+                    <% } %>
+                </select>
             </div>
             <div class="form_changer">
-                <label>Фамилия сотрудника:</label>
-                <input type="text" name="lastNameReq">
+                <label for="timeStartEmpChange">Время начала рабочего дня:</label>
+                <input type="time" id="timeStartEmpChange" name="changeStartTimeEmpReq" required>
             </div>
             <div class="form_changer">
-                <label>Дата рождения:</label>
-                <input type="datetime-local" name="dateTimeReq">
+                <label for="timeStartEmpChange">Время окончания рабочего дня:</label>
+                <input type="time" id="timeEndEmpChange" name="changeEndTimeEmpReq" required>
             </div>
-            <div class="form_changer">
-                <label>Работает в отделе:</label>
-                <input type="text" name="textReq">
-                <button type="submit" class="ui-button-submit">Отправить</button>
-            </div>
+            <button type="submit" class="ui-button-submit">Отправить</button>
         </form>
     </div>
 </div>
@@ -155,6 +207,7 @@
     const addDepartment = document.getElementById("addDep");
     const showDepartment = document.getElementById("setDep")
     const showEmployee = document.getElementById("setEmp")
+    const showStat = document.getElementById("setEmp")
 </script>
 </body>
 </html>

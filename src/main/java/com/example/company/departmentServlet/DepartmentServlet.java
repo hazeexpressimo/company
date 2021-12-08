@@ -46,15 +46,15 @@ public class DepartmentServlet extends HttpServlet {
     }
 
     private void addDepartment(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+        int id = 0;
         String name = request.getParameter("nameDepReq");
-        String startTime = "1970-01-01 " + request.getParameter("startTimeReq") + ":00";
-        String endTime = "1970-01-01 " + request.getParameter("endTimeReq") + ":00";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startTimeReq = LocalDateTime.parse(startTime, dtf);
-        LocalDateTime endTimeReq = LocalDateTime.parse(endTime, dtf);
+        String startTime = request.getParameter("startTimeReq");
+        String endTime = request.getParameter("endTimeReq");
+        LocalTime startTimeReq = LocalTime.parse(startTime);
+        LocalTime endTimeReq = LocalTime.parse(endTime);
         int floor = Integer.parseInt(request.getParameter("floorDepReq"));
         try {
-            Department department = new Department(name, startTimeReq, endTimeReq, floor);
+            Department department = new Department(id, name, startTimeReq, endTimeReq, floor);
             DepartmentDAO departmentDAO = new DepartmentDAO();
             departmentDAO.addDepartment(department);
             response.sendRedirect(request.getContextPath() + "/mainPage.jsp");

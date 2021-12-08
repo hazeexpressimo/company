@@ -44,12 +44,13 @@ public class EmployeeServlet extends HttpServlet {
         String firstname = request.getParameter("nameReq");
         String lastname = request.getParameter("lastNameReq");
         String startDateStr = request.getParameter("dateTimeReq");
+        String departmentName = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         int departmentId = Integer.parseInt(request.getParameter("textReq"));
         try {
             Date birthDate = sdf.parse(startDateStr);
             java.sql.Date birthDateSql = new java.sql.Date(birthDate.getTime());
-            Employee employee = new Employee(firstname, lastname, birthDateSql, departmentId);
+            Employee employee = new Employee(firstname, lastname, birthDateSql, departmentId, departmentName);
             EmployeeDAO employeeDAO = new EmployeeDAO();
             employeeDAO.addEmployee(employee);
             response.sendRedirect(request.getContextPath() + "/mainPage.jsp");

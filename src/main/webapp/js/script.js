@@ -44,3 +44,14 @@ function setEmployeeSchedule(employee) {
         buttonEmp1.style.removeProperty('background')
     }
 }
+
+function showStatistic(statistic) {
+    var buttonStat = document.getElementById("button7");
+    if (statistic.style.display == "none") {
+        statistic.style.display = "block";
+        buttonStat.style.background = selectedBackground;
+    } else {
+        statistic.style.display = "none";
+        buttonStat.style.removeProperty('background')
+    }
+}

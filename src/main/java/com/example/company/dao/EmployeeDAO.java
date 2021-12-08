@@ -23,7 +23,8 @@ public class EmployeeDAO {
                 String lastname = rs.getString("lastname");
                 Date dateOfBirth = rs.getDate("birthdate");
                 int departmentId = rs.getInt("departmentId");
-                Employee employee = new Employee(firstname, lastname, dateOfBirth, departmentId);
+                String departmentName = rs.getString("department");
+                Employee employee = new Employee(firstname, lastname, dateOfBirth, departmentId, departmentName);
                 result.add(employee);
             }
         } catch (SQLException throwables) {

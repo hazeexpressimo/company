@@ -8,13 +8,24 @@ public class Employee {
     private String lastName;
     private Date dateOfBirth;
     private int departmentId;
+    private String departmentName;
 
-    public Employee(String firstName, String lastName, Date dateOfBirth, int departmentId) {
+    public Employee(String firstName, String lastName, Date dateOfBirth, int departmentId, String departmentName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.departmentId = departmentId;
+        this.departmentName = departmentName;
     }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
     public Employee() {
 
     }
